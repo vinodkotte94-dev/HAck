@@ -1,0 +1,24 @@
+function getAdviceFromServer() {
+  const loc = document.getElementById("location").value;
+  const lang = document.getElementById("language").value;
+
+  fetch(SoilServlet?location=${encodeURIComponent(loc)}&language=${encodeURIComponent(lang)})
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById("adviceBox").innerText = data.error;
+        return;
+      }
+      const msg =
+        📍 ${data.location}\n +
+        🌐 ${data.wrb} / ${data.usda}\n +
+        📍 Lat: ${data.latitude}, Lon: ${data.longitude}\n\n +
+        📝 ${data.description}\n\n +
+        🍀 Suitable Crops: ${data.crops}\n\n;
+      document.getElementById("adviceBox").innerText = msg;
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("adviceBox").innerText = "Error fetching data from server.";
+    });
+}
